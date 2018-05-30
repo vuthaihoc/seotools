@@ -41,6 +41,17 @@ class SEOMeta implements MetaTagsContract
      * @var string
      */
     protected $description;
+	
+	/**
+	 * m
+	 * @var string
+	 */
+	protected $robots_index = null;
+	
+	/**
+	 * @var string
+	 */
+	protected $robots_follow = null;
 
     /**
      * The meta keywords.
@@ -90,6 +101,13 @@ class SEOMeta implements MetaTagsContract
      * @var array
      */
     protected $alternateLanguages = [];
+    
+    /**
+     * The alternate medias.
+     *
+     * @var array
+     */
+    protected $alternateMedias = [];
 
     /**
      * @var Config
@@ -130,6 +148,7 @@ class SEOMeta implements MetaTagsContract
 
         $title = $this->getTitle();
         $description = $this->getDescription();
+        $robots = $this->getRobots();
         $keywords = $this->getKeywords();
         $metatags = $this->getMetatags();
         $canonical = $this->getCanonical();
@@ -137,6 +156,7 @@ class SEOMeta implements MetaTagsContract
         $prev = $this->getPrev();
         $next = $this->getNext();
         $languages = $this->getAlternateLanguages();
+        $alternateMedias = $this->getAlternateMedias();
 
         $html = [];
 
@@ -146,6 +166,10 @@ class SEOMeta implements MetaTagsContract
 
         if ($description) {
             $html[] = "<meta name=\"description\" content=\"{$description}\">";
+        }
+        
+        if ($robots) {
+            $html[] = "<meta name=\"robot\" content=\"{$robots}\">";
         }
 
         if (!empty($keywords)) {
@@ -180,10 +204,14 @@ class SEOMeta implements MetaTagsContract
         if ($next) {
             $html[] = "<link rel=\"next\" href=\"{$next}\"/>";
         }
-
-        foreach ($languages as $lang) {
-            $html[] = "<link rel=\"alternate\" hreflang=\"{$lang['lang']}\" href=\"{$lang['url']}\"/>";
-        }
+	
+	    foreach ($languages as $lang) {
+		    $html[] = "<link rel=\"alternate\" hreflang=\"{$lang['lang']}\" href=\"{$lang['url']}\"/>";
+	    }
+	    
+	    foreach ($alternateMedias as $alternateMedia) {
+		    $html[] = "<link rel=\"alternate\" media=\"{$alternateMedia['media']}\" href=\"{$alternateMedia['url']}\"/>";
+	    }
 
         return ($minify) ? implode('', $html) : implode(PHP_EOL, $html);
     }
@@ -254,6 +282,53 @@ class SEOMeta implements MetaTagsContract
         $this->description = (false == $description) ? $description : strip_tags(htmlentities($description));
 
         return $this;
+    }
+	
+	/**
+	 * Setting meta robots
+	 * @param $index
+	 * @param $follow
+	 */
+    public function setRobots($index, $follow = null)
+    {
+        $this->setRobotsIndex( $index);
+        $this->setRobotsFollow( $follow);
+    }
+	
+	/**
+	 * Setting meta index
+	 * @param $index
+	 *
+	 * @throws \Exception
+	 */
+    public function setRobotsIndex($index){
+    	if($index === null){
+    		$this->robots_index = null;
+	    }elseif ($index === false || $index === 'noindex'){
+		    $this->robots_index = 'noindex';
+	    }elseif ($index === true || $index === 'index'){
+		    $this->robots_index = 'index';
+	    }else{
+		    throw new \Exception("Dont support value(" . $index . ") for robots meta tag");
+	    }
+    }
+	
+	/**
+	 * Setting meta follow
+	 * @param $follow
+	 *
+	 * @throws \Exception
+	 */
+    public function setRobotsFollow($follow){
+	    if($follow === null){
+		    $this->robots_follow = null;
+	    }elseif ($follow === false || $follow === 'nofollow'){
+		    $this->robots_follow = 'nofollow';
+	    }elseif ($follow === true || $follow === 'follow'){
+		    $this->robots_follow = 'follow';
+	    }else{
+		    throw new \Exception("Dont support value(" . $follow . ") for robots meta tag");
+	    }
     }
 
     /**
@@ -406,6 +481,21 @@ class SEOMeta implements MetaTagsContract
     }
 
     /**
+     * Add an alternate media.
+     *
+     * @param string $media media or devices
+     * @param string $url
+     *
+     * @return MetaTagsContract
+     */
+    public function addAlternateMedia($media, $url)
+    {
+        $this->alternateLanguages[] = ['media' => $media, 'url' => $url];
+
+        return $this;
+    }
+
+    /**
      * Add alternate languages.
      *
      * @param array $languages
@@ -415,6 +505,20 @@ class SEOMeta implements MetaTagsContract
     public function addAlternateLanguages(array $languages)
     {
         $this->alternateLanguages = array_merge($this->alternateLanguages, $languages);
+
+        return $this;
+    }
+
+    /**
+     * Add alternate medias.
+     *
+     * @param array $alternateMedias
+     *
+     * @return MetaTagsContract
+     */
+    public function addAlternateMedias(array $alternateMedias)
+    {
+        $this->alternateMedias = array_merge($this->alternateMedias, $alternateMedias);
 
         return $this;
     }
@@ -498,6 +602,49 @@ class SEOMeta implements MetaTagsContract
     }
 
     /**
+     * Get the robots index.
+     *
+     * @return string|null
+     */
+    public function getRobotsIndex()
+    {
+        if (null === $this->robots_index) {
+            return;
+        }
+
+        return $this->robots_index;
+    }
+
+    /**
+     * Get the Robots follow.
+     *
+     * @return string|null
+     */
+    public function getRobotsFollow()
+    {
+        if (false === $this->robots_follow) {
+            return;
+        }
+
+        return $this->robots_follow;
+    }
+	
+	/**
+	 * Get robots setting as text
+	 * @return string
+	 */
+    public function getRobots(){
+    	$robots = [];
+    	if($index = $this->getRobotsIndex()){
+		    $robots[] = $index;
+	    }
+    	if($follow = $this->getRobotsFollow()){
+		    $robots[] = $follow;
+	    }
+	    return implode( ", ", $robots);
+    }
+
+    /**
      * Get the canonical URL.
      *
      * @return string
@@ -548,6 +695,14 @@ class SEOMeta implements MetaTagsContract
     {
         return $this->alternateLanguages;
     }
+	
+	/**
+	 * Get alternate medias
+	 * @return array
+	 */
+    public function getAlternateMedias(){
+    	return $this->alternateMedias;
+    }
 
     /**
      * Reset all data.
@@ -565,6 +720,9 @@ class SEOMeta implements MetaTagsContract
         $this->metatags = [];
         $this->keywords = [];
         $this->alternateLanguages = [];
+        $this->alternateMedias = [];
+        $this->robots_index = null;
+        $this->robots_follow = null;
     }
 
     /**

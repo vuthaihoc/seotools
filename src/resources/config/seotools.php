@@ -11,6 +11,8 @@ return [
             'separator'    => ' - ',
             'keywords'     => [],
             'canonical'    => false, // Set null for using Url::current(), set false to total remove
+	        'robots_index' => null,
+	        'robots_follow' => null,
         ],
 
         /*
