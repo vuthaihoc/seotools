@@ -279,7 +279,7 @@ class SEOMeta implements MetaTagsContract
     {
         // clean and store description
         // if is false, set false
-        $this->description = (false == $description) ? $description : strip_tags(htmlentities($description));
+        $this->description = (false == $description) ? $description : SEOTools::safeValue($description);
 
         return $this;
     }

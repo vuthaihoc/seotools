@@ -137,4 +137,13 @@ class SEOTools implements SEOContract
 		$this->opengraph()->setUrl( $url);
 		$this->twitter()->setUrl( $url);
 	}
+	
+	public static function safeValue($string){
+    	return strip_tags(
+    		str_replace(
+    			["<",">","\"","'"],
+			    ["&lt;","&gt;","&quot;","&quot;"],
+			    $string)
+	    );
+	}
 }
