@@ -22,6 +22,15 @@ interface MetaTags
      * @return string
      */
     public function generate($minify = false);
+	
+	/**
+	 * Add custom tag with options, pass $tag as null/fail to reset
+	 * @param string $tag
+	 * @param array $options
+	 *
+	 * @return mixed
+	 */
+    public function addCustomTag($tag, array $options = []);
 
     /**
      * Set the title.

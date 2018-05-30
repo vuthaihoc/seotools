@@ -126,6 +126,20 @@ class SEOMeta implements MetaTagsContract
         'pintrest' => 'p:domain_verify',
         'yandex'   => 'yandex-verification',
     ];
+	
+	/**
+	 * @see https://github.com/joshbuchea/HEAD
+	 * @var array
+	 */
+    protected $customTags = [
+//    	[
+//    		'tag' => 'meta',
+//		    'options' => [
+//		    	'name' => 'viewport',
+//			    'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no',
+//		    ],
+//	    ]
+    ];
 
     /**
      * @param Config $config
@@ -157,6 +171,7 @@ class SEOMeta implements MetaTagsContract
         $next = $this->getNext();
         $languages = $this->getAlternateLanguages();
         $alternateMedias = $this->getAlternateMedias();
+        $customTags = $this->customTags;
 
         $html = [];
 
@@ -169,7 +184,7 @@ class SEOMeta implements MetaTagsContract
         }
         
         if ($robots) {
-            $html[] = "<meta name=\"robot\" content=\"{$robots}\">";
+            $html[] = "<meta name=\"robots\" content=\"{$robots}\">";
         }
 
         if (!empty($keywords)) {
@@ -212,11 +227,40 @@ class SEOMeta implements MetaTagsContract
 	    foreach ($alternateMedias as $alternateMedia) {
 		    $html[] = "<link rel=\"alternate\" media=\"{$alternateMedia['media']}\" href=\"{$alternateMedia['url']}\"/>";
 	    }
+	    
+	    foreach ($customTags as $customTag){
+        	$_html = ["<" . $customTag['tag']];
+        	foreach ($customTag['options'] as $k => $v){
+        		$_html[] = $k . "=\"" . $v . "\"";
+	        }
+        	$_html[] = ">";
+		    $html[] = implode( " ", $_html);
+	    }
 
         return ($minify) ? implode('', $html) : implode(PHP_EOL, $html);
     }
-
-    /**
+	
+	/**
+	 * Add custom tag with options, pass $tag as null/fail to reset
+	 * @param string $tag
+	 * @param array $options
+	 *
+	 * @return mixed
+	 */
+	public function addCustomTag( $tag, array $options = [] ) {
+		if($tag == null){
+			$this->customTags = [];
+		}else{
+			$this->customTags[] = [
+				'tag' => $tag,
+				'options' => $options,
+			];
+		}
+		return $this;
+	}
+	
+	
+	/**
      * Sets the title.
      *
      * @param string $title
