@@ -1,12 +1,16 @@
 <?php
+/**
+ * @see https://github.com/artesaos/seotools
+ */
 
 return [
-    'meta'      => [
+    'meta' => [
         /*
          * The default configurations to be used by the meta generator.
          */
         'defaults'       => [
             'title'        => "It's Over 9000!", // set false to total remove
+            'titleBefore'  => false, // Put defaults.title before page title, like 'It's Over 9000! - Dashboard'
             'description'  => 'For those who helped create the Genki Dama', // set false to total remove
             'separator'    => ' - ',
             'keywords'     => [],
@@ -14,7 +18,6 @@ return [
 	        'robots_index' => null,
 	        'robots_follow' => null,
         ],
-
         /*
          * Webmaster tags are always added.
          */
@@ -44,8 +47,20 @@ return [
          * The default values to be used by the twitter cards generator.
          */
         'defaults' => [
-          //'card'        => 'summary',
-          //'site'        => '@LuizVinicius73',
+            //'card'        => 'summary',
+            //'site'        => '@LuizVinicius73',
+        ],
+    ],
+    'json-ld' => [
+        /*
+         * The default configurations to be used by the json-ld generator.
+         */
+        'defaults' => [
+            'title'       => 'Over 9000 Thousand!', // set false to total remove
+            'description' => 'For those who helped create the Genki Dama', // set false to total remove
+            'url'         => false, // Set null for using Url::current(), set false to total remove
+            'type'        => 'WebPage',
+            'images'      => [],
         ],
     ],
 ];

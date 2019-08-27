@@ -17,7 +17,7 @@ class SEOMetaTest extends BaseTest
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -239,6 +239,7 @@ class SEOMetaTest extends BaseTest
         $this->seoMeta->setCanonical('test');
         $this->seoMeta->addMeta('test');
         $this->seoMeta->addAlternateLanguage('test', 'test');
+        $this->seoMeta->setRobots(true, true);
         $this->seoMeta->reset();
 
         $this->setRightAssertion($expected);
@@ -253,5 +254,39 @@ class SEOMetaTest extends BaseTest
         $actualDom = $this->makeDomDocument($this->seoMeta->generate());
 
         $this->assertEquals($expectedDom->C14N(), $actualDom->C14N());
+    }
+
+    public function test_it_sets_default_meta_robots_to_none()
+    {
+        $this->assertEquals(null, $this->seoMeta->getRobots());
+    }
+
+    public function test_it_allows_setting_meta_robots()
+    {
+        $this->seoMeta->setRobots(true, true);
+        $this->assertEquals('index, follow', $this->seoMeta->getRobots());
+
+        $expected = "<title>It's Over 9000!</title>";
+        $expected .= "<meta name=\"description\" content=\"For those who helped create the Genki Dama\">";
+        $expected .= "<meta name=\"robots\" content=\"index, follow\">";
+
+        $this->setRightAssertion($expected);
+    }
+
+    /**
+     * @depends test_set_description
+     *
+     * @see https://github.com/artesaos/seotools/issues/122
+     */
+    public function test_utf8()
+    {
+        $description = 'de fidélisation des salariés';
+        $fullHeader = "<title>It's Over 9000!</title>";
+        $fullHeader .= "<meta name=\"description\" content=\"".$description.'">';
+
+        $this->seoMeta->setDescription($description);
+
+        $this->assertEquals($description, $this->seoMeta->getDescription());
+        $this->setRightAssertion($fullHeader);
     }
 }

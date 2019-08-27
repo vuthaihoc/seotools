@@ -25,20 +25,26 @@ interface SEOTools
     public function twitter();
 
     /**
+     * @return \Artesaos\SEOTools\Contracts\JsonLd
+     */
+    public function jsonLd();
+
+    /**
      * Setup title for all seo providers.
      *
      * @param string $title
+     * @param bool   $appendDefault
      *
-     * @return \Artesaos\SEOTools\Contracts\SEOTools
+     * @return static
      */
-    public function setTitle($title);
+    public function setTitle($title, $appendDefault = true);
 
     /**
      * Setup description for all seo providers.
      *
      * @param string $description
      *
-     * @return \Artesaos\SEOTools\Contracts\SEOTools
+     * @return static
      */
     public function setDescription($description);
 
@@ -47,7 +53,7 @@ interface SEOTools
      *
      * @param string $url
      *
-     * @return \Artesaos\SEOTools\Contracts\SEOTools
+     * @return static
      */
     public function setCanonical($url);
 
@@ -56,7 +62,7 @@ interface SEOTools
      *
      * @param array|string $urls
      *
-     * @return \Artesaos\SEOTools\Contracts\SEOTools
+     * @return static
      */
     public function addImages($urls);
 
@@ -71,7 +77,7 @@ interface SEOTools
 
     /**
      * Generate from all seo providers.
-     * 
+     *
      * @param bool $minify
      *
      * @return string

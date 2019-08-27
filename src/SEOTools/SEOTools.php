@@ -2,13 +2,12 @@
 
 namespace Artesaos\SEOTools;
 
-use Artesaos\SEOTools\Contracts\MetaTags;
 use Artesaos\SEOTools\Contracts\SEOTools as SEOContract;
 
 class SEOTools implements SEOContract
 {
     /**
-     * @return \Artesaos\SEOTools\Contracts\MetaTags
+     * {@inheritdoc}
      */
     public function metatags()
     {
@@ -16,7 +15,7 @@ class SEOTools implements SEOContract
     }
 
     /**
-     * @return \Artesaos\SEOTools\Contracts\OpenGraph
+     * {@inheritdoc}
      */
     public function opengraph()
     {
@@ -24,7 +23,7 @@ class SEOTools implements SEOContract
     }
 
     /**
-     * @return \Artesaos\SEOTools\Contracts\TwitterCards
+     * {@inheritdoc}
      */
     public function twitter()
     {
@@ -32,44 +31,41 @@ class SEOTools implements SEOContract
     }
 
     /**
-     * Setup title for all seo providers.
-     *
-     * @param string $title
-     * @param bool   $appendDefault
-     *
-     * @return \Artesaos\SEOTools\Contracts\SEOTools
+     * {@inheritdoc}
+     */
+    public function jsonLd()
+    {
+        return app('seotools.json-ld');
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function setTitle($title, $appendDefault = true)
     {
         $this->metatags()->setTitle($title, $appendDefault);
         $this->opengraph()->setTitle($title);
         $this->twitter()->setTitle($title);
+        $this->jsonLd()->setTitle($title);
 
         return $this;
     }
 
     /**
-     * Setup description for all seo providers.
-     *
-     * @param $description
-     *
-     * @return \Artesaos\SEOTools\Contracts\SEOTools
+     * {@inheritdoc}
      */
     public function setDescription($description)
     {
         $this->metatags()->setDescription($description);
         $this->opengraph()->setDescription($description);
         $this->twitter()->setDescription($description);
+        $this->jsonLd()->setDescription($description);
 
         return $this;
     }
 
     /**
-     * Sets the canonical URL.
-     *
-     * @param string $url
-     *
-     * @return \Artesaos\SEOTools\Contracts\SEOTools
+     * {@inheritdoc}
      */
     public function setCanonical($url)
     {
@@ -79,9 +75,7 @@ class SEOTools implements SEOContract
     }
 
     /**
-     * @param array|string $urls
-     *
-     * @return \Artesaos\SEOTools\Contracts\SEOTools
+     * {@inheritdoc}
      */
     public function addImages($urls)
     {
@@ -93,15 +87,13 @@ class SEOTools implements SEOContract
 
         $this->twitter()->addImage($urls);
 
+        $this->jsonLd()->addImage($urls);
+
         return $this;
     }
 
     /**
-     * Get current title from metatags.
-     *
-     * @param bool $session
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getTitle($session = false)
     {
@@ -113,11 +105,7 @@ class SEOTools implements SEOContract
     }
 
     /**
-     * Generate from all seo providers.
-     * 
-     * @param bool $minify
-     * 
-     * @return string
+     * {@inheritdoc}
      */
     public function generate($minify = false)
     {
@@ -126,6 +114,8 @@ class SEOTools implements SEOContract
         $html .= $this->opengraph()->generate();
         $html .= PHP_EOL;
         $html .= $this->twitter()->generate();
+        $html .= PHP_EOL;
+        $html .= $this->jsonLd()->generate();
 
         return ($minify) ? str_replace(PHP_EOL, '', $html) : $html;
     }

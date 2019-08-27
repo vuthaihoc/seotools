@@ -2,23 +2,19 @@
 
 namespace Artesaos\SEOTools\Providers;
 
-use Artesaos\SEOTools\Contracts;
-use Artesaos\SEOTools\OpenGraph;
+use Illuminate\Support\Str;
+use Artesaos\SEOTools\JsonLd;
 use Artesaos\SEOTools\SEOMeta;
 use Artesaos\SEOTools\SEOTools;
+use Artesaos\SEOTools\Contracts;
+use Artesaos\SEOTools\OpenGraph;
 use Artesaos\SEOTools\TwitterCards;
-use Illuminate\Config\Repository as Config;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Config\Repository as Config;
+use Illuminate\Contracts\Support\DeferrableProvider;
 
-class SEOToolsServiceProvider extends ServiceProvider
+class SEOToolsServiceProvider extends ServiceProvider implements DeferrableProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = true;
-
     /**
      * @return void
      */
@@ -56,6 +52,10 @@ class SEOToolsServiceProvider extends ServiceProvider
             return new TwitterCards($app['config']->get('seotools.twitter.defaults', []));
         });
 
+        $this->app->singleton('seotools.json-ld', function($app) {
+            return new JsonLd($app['config']->get('seotools.json-ld.defaults', []));
+        });
+
         $this->app->singleton('seotools', function() {
             return new SEOTools();
         });
@@ -63,13 +63,12 @@ class SEOToolsServiceProvider extends ServiceProvider
         $this->app->bind(Contracts\MetaTags::class, 'seotools.metatags');
         $this->app->bind(Contracts\OpenGraph::class, 'seotools.opengraph');
         $this->app->bind(Contracts\TwitterCards::class, 'seotools.twitter');
+        $this->app->bind(Contracts\JsonLd::class, 'seotools.json-ld');
         $this->app->bind(Contracts\SEOTools::class, 'seotools');
     }
 
     /**
-     * Get the services provided by the provider.
-     *
-     * @return string[]
+     * {@inheritdoc}
      */
     public function provides()
     {
@@ -78,18 +77,20 @@ class SEOToolsServiceProvider extends ServiceProvider
             Contracts\MetaTags::class,
             Contracts\TwitterCards::class,
             Contracts\OpenGraph::class,
+            Contracts\JsonLd::class,
             'seotools',
             'seotools.metatags',
             'seotools.opengraph',
             'seotools.twitter',
+            'seotools.json-ld',
         ];
     }
 
     /**
      * @return bool
      */
-    private function isLumen()
+    private function isLumen(): bool
     {
-        return true === str_contains($this->app->version(), 'Lumen');
+        return Str::contains($this->app->version(), 'Lumen');
     }
 }

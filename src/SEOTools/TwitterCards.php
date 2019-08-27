@@ -35,9 +35,7 @@ class TwitterCards implements TwitterCardsContract
     }
 
     /**
-     * @param bool $minify
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function generate($minify = false)
     {
@@ -84,10 +82,7 @@ class TwitterCards implements TwitterCardsContract
     }
 
     /**
-     * @param string       $key
-     * @param string|array $value
-     *
-     * @return TwitterCardsContract
+     * {@inheritdoc}
      */
     public function addValue($key, $value)
     {
@@ -97,9 +92,7 @@ class TwitterCards implements TwitterCardsContract
     }
 
     /**
-     * @param string $title
-     *
-     * @return TwitterCardsContract
+     * {@inheritdoc}
      */
     public function setTitle($title)
     {
@@ -107,9 +100,7 @@ class TwitterCards implements TwitterCardsContract
     }
 
     /**
-     * @param string $type
-     *
-     * @return TwitterCardsContract
+     * {@inheritdoc}
      */
     public function setType($type)
     {
@@ -117,9 +108,7 @@ class TwitterCards implements TwitterCardsContract
     }
 
     /**
-     * @param string $site
-     *
-     * @return TwitterCardsContract
+     * {@inheritdoc}
      */
     public function setSite($site)
     {
@@ -127,19 +116,16 @@ class TwitterCards implements TwitterCardsContract
     }
 
     /**
-     * @param string $description
-     *
-     * @return TwitterCardsContract
+     * {@inheritdoc}
      */
     public function setDescription($description)
     {
-        return $this->addValue('description', SEOTools::safeValue($description));
+        return $this->addValue('description', htmlspecialchars($description, ENT_QUOTES, 'UTF-8', false));
+//        return $this->addValue('description', SEOTools::safeValue($description));
     }
 
     /**
-     * @param string $url
-     *
-     * @return TwitterCardsContract
+     * {@inheritdoc}
      */
     public function setUrl($url)
     {
@@ -147,25 +133,21 @@ class TwitterCards implements TwitterCardsContract
     }
 
     /**
-     * @param string|array $image
-     *
-     * @return TwitterCardsContract
+     * {@inheritdoc}
      *
      * @deprecated use setImage($image) instead
      */
     public function addImage($image)
     {
-        foreach ((array)$image as $url):
+        foreach ((array) $image as $url) {
             $this->images[] = $url;
-        endforeach;
+        }
 
         return $this;
     }
 
     /**
-     * @param string|array $images
-     *
-     * @return TwitterCardsContract
+     * {@inheritdoc}
      *
      * @deprecated use setImage($image) instead
      */

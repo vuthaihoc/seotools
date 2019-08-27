@@ -9,14 +9,14 @@ interface MetaTags
     /**
      * Configuration.
      *
-     * @param Config $config
+     * @param \Illuminate\Config\Repository $config
      * @return void
      */
     public function __construct(Config $config);
 
     /**
      * Generates meta tags.
-     * 
+     *
      * @param bool $minify
      *
      * @return string
@@ -38,7 +38,7 @@ interface MetaTags
      * @param string $title
      * @param bool   $appendDefault
      *
-     * @return MetaTags
+     * @return static
      */
     public function setTitle($title, $appendDefault = true);
 
@@ -47,7 +47,7 @@ interface MetaTags
      *
      * @param string $default
      *
-     * @return MetaTags
+     * @return static
      */
     public function setTitleDefault($default);
 
@@ -56,7 +56,7 @@ interface MetaTags
      *
      * @param string $separator
      *
-     * @return MetaTags
+     * @return static
      */
     public function setTitleSeparator($separator);
 
@@ -65,7 +65,7 @@ interface MetaTags
      *
      * @param string $description
      *
-     * @return MetaTags
+     * @return static
      */
     public function setDescription($description);
 	
@@ -96,9 +96,9 @@ interface MetaTags
      * Sets the list of keywords, you can send an array or string separated with commas
      * also clears the previously set keywords.
      *
-     * @param array $keywords
+     * @param string|array $keywords
      *
-     * @return MetaTags
+     * @return static
      */
     public function setKeywords($keywords);
 
@@ -107,7 +107,7 @@ interface MetaTags
      *
      * @param string|array $keyword
      *
-     * @return MetaTags
+     * @return static
      */
     public function addKeyword($keyword);
 
@@ -116,7 +116,7 @@ interface MetaTags
      *
      * @param string $key
      *
-     * @return MetaTags
+     * @return static
      */
     public function removeMeta($key);
 
@@ -127,7 +127,7 @@ interface MetaTags
      * @param string       $value
      * @param string       $name
      *
-     * @return MetaTags
+     * @return static
      */
     public function addMeta($meta, $value = null, $name = 'name');
 
@@ -136,7 +136,7 @@ interface MetaTags
      *
      * @param string $url
      *
-     * @return MetaTags
+     * @return static
      */
     public function setCanonical($url);
 	
@@ -154,7 +154,7 @@ interface MetaTags
      *
      * @param string $url
      *
-     * @return MetaTags
+     * @return static
      */
     public function setPrev($url);
 
@@ -163,7 +163,7 @@ interface MetaTags
      *
      * @param string $url
      *
-     * @return MetaTags
+     * @return static
      */
     public function setNext($url);
 
@@ -172,7 +172,8 @@ interface MetaTags
      *
      * @param string $lang language code in format ISO 639-1
      * @param string $url
-     * @return MetaTags
+     *
+     * @return static
      */
     public function addAlternateLanguage($lang, $url);
 	
@@ -191,7 +192,7 @@ interface MetaTags
      *
      * @param array $languages
      *
-     * @return MetaTags
+     * @return static
      */
     public function addAlternateLanguages(array $languages);
 	
@@ -242,7 +243,7 @@ interface MetaTags
     /**
      * Get the Meta description.
      *
-     * @return string
+     * @return string|null
      */
     public function getDescription();
 	

@@ -2,7 +2,7 @@
 
 namespace Artesaos\SEOTools\Contracts;
 
-interface TwitterCards
+interface JsonLd
 {
     /**
      * @param array $defaults
@@ -10,6 +10,8 @@ interface TwitterCards
     public function __construct(array $defaults = []);
 
     /**
+     * Generates linked data script tag.
+     *
      * @param bool $minify
      *
      * @return string
