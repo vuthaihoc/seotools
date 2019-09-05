@@ -14,10 +14,10 @@
     }
   ],
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.2",
     "ext-json": "*",
-    "illuminate/config": "5.8.*",
-    "illuminate/support": "5.8.*"
+    "illuminate/config": "6.0.*",
+    "illuminate/support": "6.0.*"
   },
   "require-dev": {
     "orchestra/testbench": "~3.8.4",
