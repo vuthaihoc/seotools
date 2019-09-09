@@ -20,7 +20,7 @@
     "illuminate/support": "6.0.*"
   },
   "require-dev": {
-    "orchestra/testbench": "~3.8.4",
+    "orchestra/testbench": "~4.0.0",
     "phpspec/phpspec": "~5.1.1"
   },
   "autoload": {
