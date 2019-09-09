@@ -6,6 +6,11 @@ use Illuminate\Support\Arr;
 use Illuminate\Config\Repository as Config;
 use Artesaos\SEOTools\Contracts\MetaTags as MetaTagsContract;
 
+/**
+ * SEOMeta provides implementation for `MetaTags` contract.
+ *
+ * @see \Artesaos\SEOTools\Contracts\MetaTags
+ */
 class SEOMeta implements MetaTagsContract
 {
     /**
@@ -181,7 +186,7 @@ class SEOMeta implements MetaTagsContract
         $html = [];
 
         if ($title) {
-            $html[] = "<title>$title</title>";
+            $html[] = Arr::get($this->config, 'add_notranslate_class', false) ? "<title class=\"notranslate\">$title</title>" : "<title>$title</title>";
         }
 
         if ($description) {

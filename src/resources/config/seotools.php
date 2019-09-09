@@ -28,6 +28,8 @@ return [
             'pinterest' => null,
             'yandex'    => null,
         ],
+
+        'add_notranslate_class' => false,
     ],
     'opengraph' => [
         /*

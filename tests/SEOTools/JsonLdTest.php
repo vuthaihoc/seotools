@@ -51,6 +51,18 @@ class JsonLdTest extends BaseTest
         $this->setRightAssertion($expected);
     }
 
+    /**
+     * @depends test_set_url
+     */
+    public function test_use_current_url()
+    {
+        $this->jsonLd->setUrl(null);
+
+        $expected = '<html><head><script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"WebPage","name":"Over 9000 Thousand!","description":"For those who helped create the Genki Dama","url":"http:\/\/localhost"}</script></head></html>';
+
+        $this->setRightAssertion($expected);
+    }
+
     public function test_set_description()
     {
         $this->jsonLd->setDescription('Kamehamehaaaaaaaa');
@@ -121,8 +133,23 @@ class JsonLdTest extends BaseTest
         $this->setRightAssertion($expected);
     }
 
+    public function test_add_values()
+    {
+        $this->jsonLd->addValues([
+            'test' => '1-2-3',
+            'author' => [
+                '@type' => 'Organization',
+                'name' => 'SeoTools',
+            ],
+        ]);
+
+        $expected = '<html><head><script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"WebPage","name":"Over 9000 Thousand!","description":"For those who helped create the Genki Dama","test":"1-2-3","author":{"@type":"Organization","name":"SeoTools"}}</script></head></html>';
+
+        $this->setRightAssertion($expected);
+    }
+
     /**
-     * @param $expectedString
+     * @param string $expectedString
      */
     protected function setRightAssertion($expectedString)
     {
