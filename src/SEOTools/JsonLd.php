@@ -4,6 +4,11 @@ namespace Artesaos\SEOTools;
 
 use Artesaos\SEOTools\Contracts\JsonLd as JsonLdContract;
 
+/**
+ * JsonLd provides implementation for `JsonLd` contract.
+ *
+ * @see \Artesaos\SEOTools\Contracts\JsonLd
+ */
 class JsonLd implements JsonLdContract
 {
     /**
@@ -27,9 +32,9 @@ class JsonLd implements JsonLdContract
     protected $description = '';
 
     /**
-     * @var string
+     * @var string|null|bool
      */
-    protected $url = '';
+    protected $url = false;
 
     /**
      * @var array
@@ -72,18 +77,16 @@ class JsonLd implements JsonLdContract
             $generated['@type'] = $this->type;
         }
 
-
         if (!empty($this->title)) {
             $generated['name'] = $this->title;
         }
-
 
         if (!empty($this->description)) {
             $generated['description'] = $this->description;
         }
 
-        if (!empty($this->url)) {
-            $generated['url'] = $this->url;
+        if ($this->url !== false) {
+            $generated['url'] = $this->url ?? app('url')->full();
         }
 
         if (!empty($this->images)) {
@@ -101,6 +104,18 @@ class JsonLd implements JsonLdContract
     public function addValue($key, $value)
     {
         $this->values[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addValues(array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->addValue($key, $value);
+        }
 
         return $this;
     }

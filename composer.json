@@ -16,11 +16,11 @@
   "require": {
     "php": ">=7.2",
     "ext-json": "*",
-    "illuminate/config": "6.0.*",
-    "illuminate/support": "6.0.*"
+    "illuminate/config": "5.8.*|^6.0",
+    "illuminate/support": "5.8.*|^6.0"
   },
   "require-dev": {
-    "orchestra/testbench": "~4.0.0",
+    "orchestra/testbench": "~3.8.4|^4.0",
     "phpspec/phpspec": "~5.1.1"
   },
   "autoload": {

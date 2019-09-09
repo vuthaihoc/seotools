@@ -1,5 +1,10 @@
-SEOTools - SEO Tools for Laravel and Lumen
-==========================================
+<p align="center">
+    <a href="https://github.com/artesaos" target="_blank">
+        <img src="https://avatars3.githubusercontent.com/u/11164074" height="100px">
+    </a>
+    <h1 align="center">SEOTools - SEO Tools for Laravel and Lumen</h1>
+    <br>
+</p>
 
 SEOTools is a package for [Laravel 5.8+](https://laravel.com/) and [Lumen](https://lumen.laravel.com/) that provides helpers for some common SEO techniques.
 
@@ -11,6 +16,8 @@ SEOTools is a package for [Laravel 5.8+](https://laravel.com/) and [Lumen](https
 > Statistics
 
 [![Latest Stable Version](https://poser.pugx.org/artesaos/seotools/v/stable)](https://packagist.org/packages/artesaos/seotools) [![Total Downloads](https://poser.pugx.org/artesaos/seotools/downloads)](https://packagist.org/packages/artesaos/seotools) [![Latest Unstable Version](https://poser.pugx.org/artesaos/seotools/v/unstable)](https://packagist.org/packages/artesaos/seotools) [![License](https://poser.pugx.org/artesaos/seotools/license)](https://packagist.org/packages/artesaos/seotools)
+
+For license information check the [LICENSE](LICENSE.md)-file.
 
 Features
 --------
@@ -638,3 +645,48 @@ SEOTools::setDescription($description);
 SEOTools::setCanonical($url);
 SEOTools::addImages($urls);
 ```
+
+Missing Features
+----------------
+
+There are many SEO-related features, which you may need for your project. While this package provides support for the basic ones,
+other are out of its scope. You'll have to use separated packages fot their integration.
+
+### SiteMap
+
+This package does not support sitemap files generation. Please consider usage one of the following packages for it:
+
+- [laravelium/sitemap](https://packagist.org/packages/laravelium/sitemap)
+
+- [spatie/laravel-sitemap](https://packagist.org/packages/spatie/laravel-sitemap)
+
+### URL Trailing Slash
+
+This package does not handle URL consistency regardless absence or presence of the slash symbol at its end.
+Please consider usage one of the following packages if you need it:
+
+- [illuminatech/url-trailing-slash](https://packagist.org/packages/illuminatech/url-trailing-slash)
+
+- [fsasvari/laravel-trailing-slash](https://packagist.org/packages/fsasvari/laravel-trailing-slash)
+
+### Microdata Markup
+
+This package does provide generation of the [microdata HTML markup](https://www.w3.org/TR/microdata/). If you need to create HTML like the following one:
+
+```html
+<div itemscope>
+ <p>My name is
+  <span itemprop="name">Elizabeth</span>.</p>
+</div>
+```
+
+you will need to handle it yourself.
+
+> Note: nowadays microdata markup is considered to be outdated. It is recommened to use [JSON Linked Data](https://json-ld.org/) instead,
+  which is supported by this extension.
+
+### RSS
+
+This package does not support RSS feed generation or related meta data composition. Please consider usage one of the following packages for it:
+
+- [spatie/laravel-feed](https://packagist.org/packages/spatie/laravel-feed)
