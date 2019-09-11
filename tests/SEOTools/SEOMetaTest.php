@@ -239,7 +239,7 @@ class SEOMetaTest extends BaseTest
         $this->seoMeta->setCanonical('test');
         $this->seoMeta->addMeta('test');
         $this->seoMeta->addAlternateLanguage('test', 'test');
-        $this->seoMeta->setRobots(true, true);
+        $this->seoMeta->setRobots('all');
         $this->seoMeta->reset();
 
         $this->setRightAssertion($expected);
@@ -251,7 +251,7 @@ class SEOMetaTest extends BaseTest
     protected function setRightAssertion($expectedString)
     {
         $expectedDom = $this->makeDomDocument($expectedString);
-        $actualDom = $this->makeDomDocument($this->seoMeta->generate());
+        $actualDom = $this->makeDomDocument($this->seoMeta->generate(true));
 
         $this->assertEquals($expectedDom->C14N(), $actualDom->C14N());
     }
@@ -263,12 +263,12 @@ class SEOMetaTest extends BaseTest
 
     public function test_it_allows_setting_meta_robots()
     {
-        $this->seoMeta->setRobots(true, true);
-        $this->assertEquals('index, follow', $this->seoMeta->getRobots());
+        $this->seoMeta->setRobots('all');
+        $this->assertEquals('all', $this->seoMeta->getRobots());
 
         $expected = "<title>It's Over 9000!</title>";
         $expected .= "<meta name=\"description\" content=\"For those who helped create the Genki Dama\">";
-        $expected .= "<meta name=\"robots\" content=\"index, follow\">";
+        $expected .= "<meta name=\"robots\" content=\"all\">";
 
         $this->setRightAssertion($expected);
     }

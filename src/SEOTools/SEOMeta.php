@@ -47,17 +47,6 @@ class SEOMeta implements MetaTagsContract
      * @var string
      */
     protected $description;
-	
-	/**
-	 * m
-	 * @var string
-	 */
-	protected $robots_index = null;
-	
-	/**
-	 * @var string
-	 */
-	protected $robots_follow = null;
 
     /**
      * The meta keywords.
@@ -160,7 +149,6 @@ class SEOMeta implements MetaTagsContract
     public function __construct(Config $config)
     {
         $this->config = $config;
-        $this->setRobots( $this->config->get('defaults.robots_index', null), $this->config->get('defaults.robots_follow', null));
     }
 
     /**
@@ -191,10 +179,6 @@ class SEOMeta implements MetaTagsContract
 
         if ($description) {
             $html[] = "<meta name=\"description\" content=\"{$description}\">";
-        }
-        
-        if ($robots) {
-            $html[] = "<meta name=\"robots\" content=\"{$robots}\">";
         }
 
         if (!empty($keywords)) {
@@ -229,50 +213,55 @@ class SEOMeta implements MetaTagsContract
         if ($next) {
             $html[] = "<link rel=\"next\" href=\"{$next}\"/>";
         }
+
+        foreach ($languages as $lang) {
+            $html[] = "<link rel=\"alternate\" hreflang=\"{$lang['lang']}\" href=\"{$lang['url']}\"/>";
+        }
+
+        if ($robots) {
+            $html[] = "<meta name=\"robots\" content=\"{$robots}\">";
+        }
 	
-	    foreach ($languages as $lang) {
-		    $html[] = "<link rel=\"alternate\" hreflang=\"{$lang['lang']}\" href=\"{$lang['url']}\"/>";
-	    }
-	    
 	    foreach ($alternateMedias as $alternateMedia) {
 		    $html[] = "<link rel=\"alternate\" media=\"{$alternateMedia['media']}\" href=\"{$alternateMedia['url']}\"/>";
 	    }
-	    
+	
 	    foreach ($customTags as $customTag){
-        	$_html = ["<" . $customTag['tag']];
-        	foreach ($customTag['options'] as $k => $v){
-        		$_html[] = $k . "=\"" . $v . "\"";
-	        }
-        	$_html[] = ">";
+		    $_html = ["<" . $customTag['tag']];
+		    foreach ($customTag['options'] as $k => $v){
+			    $_html[] = $k . "=\"" . $v . "\"";
+		    }
+		    $_html[] = ">";
 		    $html[] = implode( " ", $_html);
 	    }
 
         return ($minify) ? implode('', $html) : implode(PHP_EOL, $html);
     }
-	
-	/**
-	 * Add custom tag with options, pass $tag as null/fail to reset
-	 * @param string $tag
-	 * @param array $options
-	 *
-	 * @return mixed
-	 */
-	public function addCustomTag( $tag, array $options = [] ) {
-		if($tag == null){
-			$this->customTags = [];
-		}else{
-			$this->customTags[] = [
-				'tag' => $tag,
-				'options' => $options,
-			];
-		}
-		return $this;
-	}
-	
-	
-	/**
-	 * {@inheritdoc}
-	 */
+    /**
+     * Add custom tag with options, pass $tag as null/fail to reset
+     *
+     * @param string $tag
+     * @param array $options
+     *
+     * @return mixed
+     */
+    public function addCustomTag( $tag, array $options = [] ) {
+        if ( $tag == null ) {
+            $this->customTags = [];
+        } else {
+            $this->customTags[] = [
+                'tag'     => $tag,
+                'options' => $options,
+            ];
+        }
+        
+        return $this;
+    }
+    
+    
+    /**
+     * {@inheritdoc}
+     */
     public function setTitle($title, $appendDefault = true)
     {
         // clean title
@@ -322,53 +311,6 @@ class SEOMeta implements MetaTagsContract
 //        $this->description = (false == $description) ? $description : SEOTools::safeValue($description);
 
         return $this;
-    }
-	
-	/**
-	 * Setting meta robots
-	 * @param $index
-	 * @param $follow
-	 */
-    public function setRobots($index, $follow = null)
-    {
-        $this->setRobotsIndex( $index);
-        $this->setRobotsFollow( $follow);
-    }
-	
-	/**
-	 * Setting meta index
-	 * @param $index
-	 *
-	 * @throws \Exception
-	 */
-    public function setRobotsIndex($index){
-    	if($index === null){
-    		$this->robots_index = null;
-	    }elseif ($index === false || $index === 'noindex'){
-		    $this->robots_index = 'noindex';
-	    }elseif ($index === true || $index === 'index'){
-		    $this->robots_index = 'index';
-	    }else{
-		    throw new \Exception("Dont support value(" . $index . ") for robots meta tag");
-	    }
-    }
-	
-	/**
-	 * Setting meta follow
-	 * @param $follow
-	 *
-	 * @throws \Exception
-	 */
-    public function setRobotsFollow($follow){
-	    if($follow === null){
-		    $this->robots_follow = null;
-	    }elseif ($follow === false || $follow === 'nofollow'){
-		    $this->robots_follow = 'nofollow';
-	    }elseif ($follow === true || $follow === 'follow'){
-		    $this->robots_follow = 'follow';
-	    }else{
-		    throw new \Exception("Dont support value(" . $follow . ") for robots meta tag");
-	    }
     }
 
     /**
@@ -510,6 +452,20 @@ class SEOMeta implements MetaTagsContract
     }
 
     /**
+     * Sets the meta robots.
+     *
+     * @param string $robots
+     *
+     * @return MetaTagsContract
+     */
+    public function setRobots($robots)
+    {
+        $this->robots = $robots;
+        
+        return $this;
+    }
+
+    /**
      * Add alternate medias.
      *
      * @param array $alternateMedias
@@ -522,10 +478,10 @@ class SEOMeta implements MetaTagsContract
 
         return $this;
     }
-	
-	/**
-	 * {@inheritdoc}
-	 */
+
+    /**
+     * {@inheritdoc}
+     */
     public function getTitle()
     {
         return $this->title ?: $this->getDefaultTitle();
@@ -588,41 +544,6 @@ class SEOMeta implements MetaTagsContract
     }
 
     /**
-     * Get the robots index.
-     *
-     * @return string|null
-     */
-    public function getRobotsIndex()
-    {
-    	return $this->robots_index;
-    }
-
-    /**
-     * Get the Robots follow.
-     *
-     * @return string|null
-     */
-    public function getRobotsFollow()
-    {
-        return $this->robots_follow;
-    }
-	
-	/**
-	 * Get robots setting as text
-	 * @return string
-	 */
-    public function getRobots(){
-    	$robots = [];
-    	if($index = $this->getRobotsIndex()){
-		    $robots[] = $index;
-	    }
-    	if($follow = $this->getRobotsFollow()){
-		    $robots[] = $follow;
-	    }
-	    return implode( ", ", $robots);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getCanonical()
@@ -667,6 +588,16 @@ class SEOMeta implements MetaTagsContract
     }
 	
 	/**
+	 * Get meta robots.
+	 *
+	 * @return string
+	 */
+	public function getRobots()
+	{
+		return $this->robots ?: $this->config->get('defaults.robots', null);
+	}
+	
+	/**
 	 * Get alternate medias
 	 * @return array
 	 */
@@ -675,9 +606,7 @@ class SEOMeta implements MetaTagsContract
     }
 
     /**
-     * Reset all data.
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function reset()
     {
@@ -690,9 +619,8 @@ class SEOMeta implements MetaTagsContract
         $this->metatags = [];
         $this->keywords = [];
         $this->alternateLanguages = [];
+        $this->robots = null;
         $this->alternateMedias = [];
-        $this->robots_index = null;
-        $this->robots_follow = null;
     }
 
     /**

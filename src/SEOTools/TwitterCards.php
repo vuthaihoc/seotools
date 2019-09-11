@@ -126,7 +126,6 @@ class TwitterCards implements TwitterCardsContract
     public function setDescription($description)
     {
         return $this->addValue('description', htmlspecialchars($description, ENT_QUOTES, 'UTF-8', false));
-//        return $this->addValue('description', SEOTools::safeValue($description));
     }
 
     /**

@@ -125,15 +125,6 @@ class SEOTools implements SEOContract
         return ($minify) ? str_replace(PHP_EOL, '', $html) : $html;
     }
 	
-	public function setRobots( $index, $follow = null ) {
-		$this->metatags()->setRobots( $index, $follow);
-	}
-	
-	public function setUrl( $url ) {
-		$this->opengraph()->setUrl( $url);
-		$this->twitter()->setUrl( $url);
-	}
-	
 	public static function safeValue($string){
     	return strip_tags(
     		str_replace(

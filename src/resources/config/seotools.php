@@ -15,8 +15,7 @@ return [
             'separator'    => ' - ',
             'keywords'     => [],
             'canonical'    => false, // Set null for using Url::current(), set false to total remove
-	        'robots_index' => null,
-	        'robots_follow' => null,
+            'robots'       => false, // Set to 'all', 'none' or any combination of index/noindex and follow/nofollow
         ],
         /*
          * Webmaster tags are always added.

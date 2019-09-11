@@ -137,7 +137,4 @@ interface SEOTools
      * @return string
      */
     public function generate($minify = false);
-    
-    public function setRobots($index, $follow = null);
-    public function setUrl($url);
 }

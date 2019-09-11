@@ -110,29 +110,6 @@ interface MetaTags
      * @return static
      */
     public function setDescription($description);
-	
-	/**
-	 * Setting meta robots
-	 * @param $index
-	 * @param $follow
-	 */
-	public function setRobots($index, $follow = null);
-	
-	/**
-	 * Setting meta index
-	 * @param $index
-	 *
-	 * @throws \Exception
-	 */
-	public function setRobotsIndex($index);
-	
-	/**
-	 * Setting meta follow
-	 * @param $follow
-	 *
-	 * @throws \Exception
-	 */
-	public function setRobotsFollow($follow);
 
     /**
      * Sets the list of keywords, you can send an array or string separated with commas
@@ -288,27 +265,6 @@ interface MetaTags
      * @return string|null
      */
     public function getDescription();
-	
-	/**
-	 * Get the robots index.
-	 *
-	 * @return string|null
-	 */
-	public function getRobotsIndex();
-	
-	/**
-	 * Get the Robots follow.
-	 *
-	 * @return string|null
-	 */
-	public function getRobotsFollow();
-	
-	/**
-	 * Get robots setting as text
-	 * @return string
-	 */
-	public function getRobots();
-	
 
     /**
      * Get the canonical URL.
