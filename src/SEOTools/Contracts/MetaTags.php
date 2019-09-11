@@ -320,4 +320,9 @@ interface MetaTags
      * @return void
      */
     public function reset();
+    
+    public function getRobots();
+    
+    public function setRobots($robots);
+    
 }
