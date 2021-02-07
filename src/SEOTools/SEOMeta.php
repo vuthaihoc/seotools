@@ -127,6 +127,7 @@ class SEOMeta implements MetaTagsContract
         'alexa'    => 'alexaVerifyID',
         'pintrest' => 'p:domain_verify',
         'yandex'   => 'yandex-verification',
+        'norton'   => 'norton-safeweb-site-verification',
     ];
 	
 	/**
@@ -182,6 +183,11 @@ class SEOMeta implements MetaTagsContract
         }
 
         if (!empty($keywords)) {
+            
+            if($keywords instanceof \Illuminate\Support\Collection){
+                $keywords = $keywords->toArray();
+            }
+            
             $keywords = implode(', ', $keywords);
             $html[] = "<meta name=\"keywords\" content=\"{$keywords}\">";
         }
@@ -264,6 +270,9 @@ class SEOMeta implements MetaTagsContract
      */
     public function setTitle($title, $appendDefault = true)
     {
+        // open redirect vulnerability fix
+        $title = str_replace(['http-equiv=', 'url='], '', $title);
+        
         // clean title
         $title = strip_tags($title);
 

@@ -2,6 +2,7 @@
 
 namespace Artesaos\SEOTools;
 
+use Illuminate\Support\Arr;
 use Artesaos\SEOTools\Contracts\OpenGraph as OpenGraphContract;
 
 /**
@@ -221,8 +222,13 @@ class OpenGraph implements OpenGraphContract
         foreach ($properties as $property => $value) {
             // multiple properties
             if (is_array($value)) {
-                $subListPrefix = (is_string($property)) ? $property : $prefix;
-                $subList = $this->eachProperties($value, $subListPrefix);
+                if (is_string($property)){
+                    $subListPrefix = $prefix.":".$property;
+                    $subList = $this->eachProperties($value, $subListPrefix, false);
+                } else {
+                    $subListPrefix = (is_string($property)) ? $property : $prefix;
+                    $subList = $this->eachProperties($value, $subListPrefix);
+                }
 
                 $html[] = $subList;
             } else {
@@ -257,6 +263,7 @@ class OpenGraph implements OpenGraphContract
      */
     protected function makeTag($key = null, $value = null, $ogPrefix = false)
     {
+        $value = str_replace(['http-equiv=', 'url='], '', $value);
         return sprintf(
             '<meta property="%s%s" content="%s" />%s',
             $ogPrefix ? $this->og_prefix : '',
@@ -278,15 +285,16 @@ class OpenGraph implements OpenGraphContract
             [];
 
         foreach ($defaults as $key => $value) {
-            if ($key == 'images') {
+            if ($key === 'images') {
                 if (empty($this->images)) {
                     $this->images = $value;
                 }
-            } elseif ($key == 'url' && $value === null) {
-                $this->addProperty('url', $this->url ?: (($value === null)
-                    ? app('url')->current()
-                    : $this->config['defaults.url'])
-                );
+            } elseif ($key === 'url' && empty($value)) {
+                if ($value === null) {
+                    $this->addProperty('url', $this->url ?: app('url')->current());
+                } elseif ($this->url) {
+                    $this->addProperty('url', $this->url);
+                }
             } elseif (! empty($value) && ! array_key_exists($key, $this->properties)) {
                 $this->addProperty($key, $value);
             }
@@ -697,7 +705,7 @@ class OpenGraph implements OpenGraphContract
      */
     public function removeProperty($key)
     {
-        array_forget($this->properties, $key);
+        Arr::forget($this->properties, $key);
 
         return $this;
     }
@@ -713,6 +721,7 @@ class OpenGraph implements OpenGraphContract
             'type',
             'width',
             'height',
+            'alt',
         ];
 
         if (is_array($source)) {
